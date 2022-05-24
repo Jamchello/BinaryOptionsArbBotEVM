@@ -122,6 +122,8 @@ const keepAlive = ({
   });
 };
 
+
+
 const main = () => {
   console.log("Starting the binary options arbitrage bot");
   console.log(
