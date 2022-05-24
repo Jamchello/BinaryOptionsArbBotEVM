@@ -22,12 +22,10 @@ const updateCache = (game: gameData) => {
   console.log("Cache updated:");
   console.log(JSON.stringify(gamesCache));
 };
-
 //TODO: calculate how your bet will move the ratios
 //TODO: save them into a json
 
 const setTimeouts = async (game1: gameData, game2: gameData) => {
-  //TODO: use delay for the sooner ending game only....
   setTimeout(async () => {
     const [total, bear, bull] = await getBetsData(game1);
     const game1BearRatio = total / bear;
