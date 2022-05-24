@@ -1,8 +1,4 @@
-import { ethers, utils } from "ethers";
-import pancakeSwapAbi from "./abis/pancakeSwap";
-import predABI from "./abis/prdt";
-import dogeBetsAbi from "./abis/dogeBets";
-import candleGenieAbi from "./abis/candleGenieAbi";
+import { utils } from "ethers";
 export const pancakeSwapAddress =
   process.env.PANCAKE_ADDRESS || "0x18B2A687610328590Bc8F2e5fEdDe3b582A49cdA";
 export const predAddress =
@@ -12,7 +8,7 @@ export const dogeAddress =
 export const candleGenieAddress =
   process.env.CANDLEGENIE_ADDRESS ||
   "0xfdd38f9Be523Aff1AA5404B8203ABBD027e70dAD";
-const predReadAddress = "0xbe6cb6eadf1bf80a991eb6f6fbf865ef6ba26e3b";
+export const predReadAddress = "0xbe6cb6eadf1bf80a991eb6f6fbf865ef6ba26e3b";
 export const minimumInterval = parseInt(process.env.minInterval || "10000");
 export const prdtFilter = {
   address: predAddress,
@@ -37,29 +33,3 @@ export const candleGenieFilter = {
     "0x33a701182892fd888ed152ca2ac23771a32e814469b7cd255965471e1af3a659",
   ],
 };
-
-const bscWs = process.env.RPC_URL;
-export const provider = new ethers.providers.WebSocketProvider(bscWs as string);
-export const pancakeSwapInstance = new ethers.Contract(
-  pancakeSwapAddress,
-  pancakeSwapAbi,
-  provider
-);
-
-export const dogeBetsInstance = new ethers.Contract(
-  dogeAddress,
-  dogeBetsAbi,
-  provider
-);
-
-export const candleGenieInstance = new ethers.Contract(
-  candleGenieAddress,
-  candleGenieAbi,
-  provider
-);
-
-export const predInstance = new ethers.Contract(
-  predReadAddress,
-  predABI,
-  provider
-);

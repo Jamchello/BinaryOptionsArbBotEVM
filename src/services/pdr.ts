@@ -5,5 +5,5 @@ export const getPdrContract = async () => {
   const data : PdrData = await axios.post(pdrDataUrl, {
     tokenCode: "BNB"
   }).then(resp => resp.data)
-  return data.result[0].address
+    return data.result[0].address
 }

@@ -3,6 +3,10 @@ import { providers } from "ethers";
 interface PdrResultItem {
   address: string;
 }
+export enum betDirection {
+  BULL = 1,
+  BEAR = 0,
+}
 
 export interface PdrData {
   result: Array<PdrResultItem>;
@@ -28,7 +32,7 @@ export interface logEvent {
 }
 
 export interface gameData {
-  site: string;
+  site: Site;
   activeEpoch: number;
   timeStarted: number;
   multiplierBull?: number;
@@ -40,3 +44,20 @@ export type Site = "PRDT" | "PancakeSwap" | "Doge" | "Genie";
 export type Rounds = Array<{ type: string; hex: string } | boolean>;
 
 export type Games = [gameData, gameData];
+
+export type Filter = {
+  address: string;
+  topics: Array<string>;
+};
+
+interface GameDictionaryItem {
+  site: Site;
+  filter: Filter;
+  bullIndex: number;
+  bearIndex: number;
+  betsHandler: (game: gameData) => Promise<Array<number>>;
+}
+
+export interface GamesDictionary {
+  [key: string]: GameDictionaryItem;
+}

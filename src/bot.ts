@@ -4,20 +4,21 @@
 // Repeat
 // logic to manage the wallets balance, make sure its sufficient etc etc
 // maybe play with units of the total balance like pro sports betters do.
-// pass in the epoch numbers, make sure at time of betting the numbers in games[] match up - prevent lapping
+// save them into a json
 require("dotenv").config();
+import { minimumInterval } from "./utils/constants";
+import games from "./utils/games";
+import { BigNumber } from "ethers";
+import provider from "./utils/provider";
 import {
-  prdtFilter,
-  pancakeSwapFilter,
-  provider,
-  minimumInterval,
-  dogeFilter,
-  candleGenieFilter,
-} from "./utils/constants";
-import { BigNumber, utils } from "ethers";
-import { gameData, KeepAliveParams, logEvent, Site } from "./types";
-import { getBetsData } from "./utils/utils";
+  gameData,
+  KeepAliveParams,
+  logEvent,
+  Site,
+  betDirection,
+} from "./types";
 let gamesCache: Array<gameData> = [];
+const betAmount: number = 1.0;
 
 const updateCache = (game: gameData) => {
   if (gamesCache.length < 2) {
@@ -30,25 +31,44 @@ const updateCache = (game: gameData) => {
   console.log("Cache updated:");
   console.log(JSON.stringify(gamesCache));
 };
+//TODO: calculate how your bet will move the ratios
+const calculateRatiosWithBet = (
+  total: number,
+  bear: number,
+  bull: number,
+  bet: betDirection
+): number[] => {
+  total = total + betAmount;
+  if (bet === betDirection.BEAR) {
+    bear = bear + betAmount;
+  } else if (bet === betDirection.BULL) {
+    bull = bull + betAmount;
+  }
+  const bearRatio: number = bear / total;
+  const bullRatio: number = bull / total;
+
+  return [bearRatio, bullRatio];
+};
 
 const setTimeouts = async (game1: gameData, game2: gameData) => {
-  //TODO: use delay for the sooner ending game only....
   setTimeout(async () => {
-    const [total, bear, bull] = await getBetsData(game1);
+    const [total, bear, bull] = await getGameBets(game1);
     const game1BearRatio = total / bear;
     const game1BullRatio = total / bull;
     console.log(`Game1: Bear=${game1BearRatio}, Bull=${game1BullRatio}`);
+    //const [game1AdjustedBearRatio, game1AdjustedBullRatio] = calculateRatiosWithBet(total, bear, bull, bet);
 
-    const [total2, bear2, bull2] = await getBetsData(game2);
+    const [total2, bear2, bull2] = await getGameBets(game2);
     const game2BearRatio = total2 / bear2;
     const game2BullRatio = total2 / bull2;
+    //const [game2AdjustedBearRatio, game2AdjustedBullRatio] = calculateRatiosWithBet(total2, bear2, bull2, bet2);
     console.log(
       `Game2 (bet time): Bear=${game2BearRatio}, Bull=${game2BullRatio}`
     );
   }, 295000 - (Date.now() - game1.timeStarted));
 
   setTimeout(async () => {
-    const [total, bear, bull] = await getBetsData(game2);
+    const [total, bear, bull] = await getGameBets(game2);
     const game2BearRatio = total / bear;
     const game2BullRatio = total / bull;
     console.log(
@@ -115,20 +135,12 @@ const keepAlive = ({
     onDisconnect(err);
   });
 
-  provider.on(dogeFilter, (log: logEvent) => {
-    handleRoundStartEvent(log, "Doge");
-  });
-
-  provider.on(prdtFilter, (log: logEvent) => {
-    handleRoundStartEvent(log, "PRDT");
-  });
-
-  provider.on(pancakeSwapFilter, (log: logEvent) => {
-    handleRoundStartEvent(log, "PancakeSwap");
-  });
-
-  provider.on(candleGenieFilter, (log: logEvent) => {
-    handleRoundStartEvent(log, "Genie");
+  // Subscribe to events for each game site.
+  Object.keys(games).map((key) => {
+    const game = games[key];
+    provider.on(game.filter, (log: logEvent) => {
+      handleRoundStartEvent(log, key as Site);
+    });
   });
 
   provider._websocket.on("pong", () => {
@@ -154,3 +166,8 @@ const main = () => {
 };
 
 main();
+function getGameBets(
+  game1: gameData
+): [any, any, any] | PromiseLike<[any, any, any]> {
+  throw new Error("Function not implemented.");
+}
