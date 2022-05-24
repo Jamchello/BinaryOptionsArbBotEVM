@@ -78,6 +78,7 @@ export const games: Array<{
     filter: dogeFilter,
     bullIndex: 1,
     bearIndex: 2,
+
   },
   {
     site: "PRDT",

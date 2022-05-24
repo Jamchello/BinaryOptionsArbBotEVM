@@ -48,13 +48,14 @@ const setTimeouts = async (game1: gameData, game2: gameData) => {
     const game1BearRatio = total / bear;
     const game1BullRatio = total / bull;
     console.log(`Game1: Bear=${game1BearRatio}, Bull=${game1BullRatio}`);
+    //const [game1AdjustedBearRatio, game1AdjustedBullRatio] = calculateRatiosWithBet(total, bear, bull, bet);
 
     const [total2, bear2, bull2] = await getBetsData(game2);
     const game2BearRatio = total2 / bear2;
     const game2BullRatio = total2 / bull2;
+    //const [game2AdjustedBearRatio, game2AdjustedBullRatio] = calculateRatiosWithBet(total2, bear2, bull2, bet2);
     console.log(
-      `Game2 (bet time): Bear=${game2BearRatio}, Bull=${game2BullRatio}`
-    );
+      `Game2 (bet time): Bear=${game2BearRatio}, Bull=${game2BullRatio}`);
   }, 295000 - (Date.now() - game1.timeStarted));
 
   setTimeout(async () => {
