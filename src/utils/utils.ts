@@ -63,7 +63,9 @@ const genieBetsHandler = async (game: gameData) => {
   const data = await candleGenieInstance.Rounds(game.activeEpoch);
   return parseGenieBets(data);
 };
+//TODO: Single parseContractData function
 
+//TODO put the handlers into the games list too.
 const siteToBetsFunction: {
   [key: string]: (game: gameData) => Promise<Array<number>>;
 } = {
@@ -74,5 +76,7 @@ const siteToBetsFunction: {
 };
 
 export const getBetsData = (game: gameData) => {
+  //TODO: siteToBets returns the array of numbers
   return siteToBetsFunction[game.site](game);
+  //TODO: parseBets(contractResponse: Array<number>, site)...
 };

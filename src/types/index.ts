@@ -40,3 +40,8 @@ export type Site = "PRDT" | "PancakeSwap" | "Doge" | "Genie";
 export type Rounds = Array<{ type: string; hex: string } | boolean>;
 
 export type Games = [gameData, gameData];
+
+export type Filter = {
+  address: string;
+  topics: Array<string>;
+};

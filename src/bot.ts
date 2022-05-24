@@ -4,17 +4,9 @@
 // Repeat
 // logic to manage the wallets balance, make sure its sufficient etc etc
 // maybe play with units of the total balance like pro sports betters do.
-// pass in the epoch numbers, make sure at time of betting the numbers in games[] match up - prevent lapping
 require("dotenv").config();
-import {
-  prdtFilter,
-  pancakeSwapFilter,
-  provider,
-  minimumInterval,
-  dogeFilter,
-  candleGenieFilter,
-} from "./utils/constants";
-import { BigNumber, utils } from "ethers";
+import { provider, minimumInterval, games } from "./utils/constants";
+import { BigNumber } from "ethers";
 import { gameData, KeepAliveParams, logEvent, Site } from "./types";
 import { getBetsData } from "./utils/utils";
 let gamesCache: Array<gameData> = [];
@@ -30,6 +22,9 @@ const updateCache = (game: gameData) => {
   console.log("Cache updated:");
   console.log(JSON.stringify(gamesCache));
 };
+
+//TODO: calculate how your bet will move the ratios
+//TODO: save them into a json
 
 const setTimeouts = async (game1: gameData, game2: gameData) => {
   //TODO: use delay for the sooner ending game only....
@@ -115,20 +110,11 @@ const keepAlive = ({
     onDisconnect(err);
   });
 
-  provider.on(dogeFilter, (log: logEvent) => {
-    handleRoundStartEvent(log, "Doge");
-  });
-
-  provider.on(prdtFilter, (log: logEvent) => {
-    handleRoundStartEvent(log, "PRDT");
-  });
-
-  provider.on(pancakeSwapFilter, (log: logEvent) => {
-    handleRoundStartEvent(log, "PancakeSwap");
-  });
-
-  provider.on(candleGenieFilter, (log: logEvent) => {
-    handleRoundStartEvent(log, "Genie");
+  // Subscribe to events for each game site.
+  games.map((game) => {
+    provider.on(game.filter, (log: logEvent) => {
+      handleRoundStartEvent(log, game.site);
+    });
   });
 
   provider._websocket.on("pong", () => {

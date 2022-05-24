@@ -3,6 +3,7 @@ import pancakeSwapAbi from "./abis/pancakeSwap";
 import predABI from "./abis/prdt";
 import dogeBetsAbi from "./abis/dogeBets";
 import candleGenieAbi from "./abis/candleGenieAbi";
+import { Filter, gameData, Site } from "../types";
 export const pancakeSwapAddress =
   process.env.PANCAKE_ADDRESS || "0x18B2A687610328590Bc8F2e5fEdDe3b582A49cdA";
 export const predAddress =
@@ -63,3 +64,31 @@ export const predInstance = new ethers.Contract(
   predABI,
   provider
 );
+
+//TODO: condense the indices into here; remove all the junk helpers/handlers
+export const games: Array<{
+  site: Site;
+  filter: Filter;
+  bullIndex?: number;
+  bearIndex?: number;
+  betsHandler?: (game: gameData) => Promise<Array<number>>;
+}> = [
+  {
+    site: "Doge",
+    filter: dogeFilter,
+    bullIndex: 1,
+    bearIndex: 2,
+  },
+  {
+    site: "PRDT",
+    filter: prdtFilter,
+  },
+  {
+    site: "PancakeSwap",
+    filter: pancakeSwapFilter,
+  },
+  {
+    site: "Genie",
+    filter: candleGenieFilter,
+  },
+];
