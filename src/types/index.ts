@@ -3,6 +3,10 @@ import { providers } from "ethers";
 interface PdrResultItem {
   address: string;
 }
+export enum betDirection{
+  BULL = 1,
+  BEAR = 0 
+}
 
 export interface PdrData {
   result: Array<PdrResultItem>;

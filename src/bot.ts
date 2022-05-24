@@ -7,9 +7,11 @@
 require("dotenv").config();
 import { provider, minimumInterval, games } from "./utils/constants";
 import { BigNumber } from "ethers";
-import { gameData, KeepAliveParams, logEvent, Site } from "./types";
+import { gameData, KeepAliveParams, logEvent, Site, betDirection } from "./types";
 import { getBetsData } from "./utils/utils";
 let gamesCache: Array<gameData> = [];
+const betAmount: number = 1.00
+
 
 const updateCache = (game: gameData) => {
   if (gamesCache.length < 2) {
@@ -24,6 +26,19 @@ const updateCache = (game: gameData) => {
 };
 
 //TODO: calculate how your bet will move the ratios
+const calculateRatiosWithBet =  (total: number, bear: number, bull: number, bet: betDirection): number[]  => {
+  total = total + betAmount
+  if(bet === betDirection.BEAR){
+    bear = bear + betAmount
+  }else if (bet === betDirection.BULL){
+    bull = bull + betAmount
+  }
+  const bearRatio: number = bear / total;
+  const bullRatio: number  = bull / total;
+
+  return [bearRatio, bullRatio]
+}
+
 //TODO: save them into a json
 
 const setTimeouts = async (game1: gameData, game2: gameData) => {
