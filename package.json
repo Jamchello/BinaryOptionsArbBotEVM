@@ -4,7 +4,8 @@
   "description": "",
   "main": "./src/bot.ts",
   "scripts": {
-    "dev": "nodemon --watch './**/*.ts' --exec ts-node src/bot.ts",
+    "dev": "nodemon --watch './**/*.ts' --exec 'ts-node' src/bot.ts",
+    "devwindows": "nodemon --watch './**/*.ts' --exec ts-node src/bot.ts",
     "build": "rimraf dist && tsc",
     "start": "node dist/bot.js",
     "start:prod": "pm2-runtime start dist/bot.js --name binaryboss",
