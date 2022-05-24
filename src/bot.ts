@@ -17,6 +17,7 @@ import {
   Site,
   betDirection,
 } from "./types";
+import { getGameBets } from "./utils/utils";
 let gamesCache: Array<gameData> = [];
 const betAmount: number = 1.0;
 
@@ -166,8 +167,3 @@ const main = () => {
 };
 
 main();
-function getGameBets(
-  game1: gameData
-): [any, any, any] | PromiseLike<[any, any, any]> {
-  throw new Error("Function not implemented.");
-}

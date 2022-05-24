@@ -10,7 +10,7 @@ import games from "./games";
 export const getGameBets = async (game: gameData) => {
   const { bearIndex, bullIndex, betsHandler } = games[game.site];
   const roundsData = await betsHandler(game);
-  //if all three are defined (i.e we have no errors, then parse accordingly)
+
   const bull = parseFloat(formatEther(roundsData[bearIndex].toString()));
   const bear = parseFloat(formatEther(roundsData[bullIndex].toString()));
   const total = bear + bull;
@@ -43,7 +43,7 @@ export const calculateBestBet = (game1 : gameData, game2: gameData)  => {
     return [game1, game2]
   }
 
-  console.log("The two games are not worth betting on");
+  console.log("no bet");
 }
 
 export const calculateRatiosWithBet = (
@@ -51,20 +51,17 @@ export const calculateRatiosWithBet = (
   total: number,
   bear: number,
   bull: number,
-  bet: betDirection,
   betAmount: number
 ): number[] => {
   total = total + betAmount;
-  if (bet === betDirection.BEAR) {
+  if (game.betDirection === betDirection.BEAR) {
     bear = bear + betAmount;
-  } else if (bet === betDirection.BULL) {
+  } else if (game.betDirection === betDirection.BULL) {
     bull = bull + betAmount;
   }
   const bearRatio = total / bear;
   const bullRatio = total / bull ;
 
-  game.multiplierBear = bearRatio;
-  game.multiplierBull = bullRatio;
 
   return [bearRatio, bullRatio];
 };
