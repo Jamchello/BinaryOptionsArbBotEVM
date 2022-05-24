@@ -82,13 +82,19 @@ export const games: Array<{
   {
     site: "PRDT",
     filter: prdtFilter,
+    bullIndex: 2,
+    bearIndex: 3,
   },
   {
     site: "PancakeSwap",
     filter: pancakeSwapFilter,
+    bullIndex: 9,
+    bearIndex: 10,
   },
   {
     site: "Genie",
     filter: candleGenieFilter,
+    bullIndex: 1,
+    bearIndex: 2,
   },
 ];
