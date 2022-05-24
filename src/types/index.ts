@@ -12,6 +12,8 @@ export interface PdrData {
   result: Array<PdrResultItem>;
 }
 
+
+
 export type KeepAliveParams = {
   provider: providers.WebSocketProvider;
   onDisconnect: (err: any) => void;
@@ -37,6 +39,7 @@ export interface gameData {
   timeStarted: number;
   multiplierBull?: number;
   multiplierBear?: number;
+  betDirection?: betDirection
 }
 
 export type Site = "PRDT" | "PancakeSwap" | "Doge" | "Genie";
