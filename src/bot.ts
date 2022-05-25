@@ -50,7 +50,7 @@ const setTimeouts = async (game1: gameData, game2: gameData) => {
     );
     makeBestBets(
       { ...game1, total, bear, bull },
-      { ...game2, total, bear, bull },
+      { ...game2, total: total, bear: bear2, bull: bull2 },
       0.00303305
     );
   }, 295000 - (Date.now() - game1.timeStarted));
