@@ -42,6 +42,7 @@ export const makeBestBets = (
   game2: gameDataWithValues,
   betAmount: number
 ) => {
+  console.log("Entered betting function");
   const game1Odds = calculateRatioWithBet(game1, betAmount);
   const game2Odds = calculateRatioWithBet(game2, betAmount);
 
