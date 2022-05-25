@@ -44,23 +44,8 @@ export const makeBestBets = (
 ) => {
   const game1Odds = calculateRatioWithBet(game1, 1);
   const game2Odds = calculateRatioWithBet(game2, 1);
-  if (
-    game1Odds[0] < 2 &&
-    game2Odds[1] < 2 &&
-    game1Odds[1] < 2 &&
-    game2Odds[0] < 2
-  ) {
-    //Both scenarios possible; calculate the highest returning
-    const a = game1Odds[0] + game2Odds[1];
-    const b = game1Odds[1] + game2Odds[0];
-    //if a > b, bet bull on g1, bear on g2
-    //else bet bear on g1, bull on g2
-    console.log(
-      a > b
-        ? `placed ${betAmount} BNB bull @${game1Odds[0]} on ${game1.site}, & ${betAmount} BNB bear @${game2Odds[1]} on ${game2.site}`
-        : `placed ${betAmount} BNB bull @${game2Odds[0]} on ${game2.site}, & ${betAmount} BNB bear @${game1Odds[1]} on ${game1.site}`
-    );
-  } else if (game1Odds[0] > 2 && game2Odds[1] > 2) {
+
+  if (game1Odds[0] > 2 && game2Odds[1] > 2) {
     console.log(
       `placed ${betAmount} BNB bull @${game1Odds[0]} on ${game1.site}, & ${betAmount} BNB bear @${game2Odds[1]} on ${game2.site}`
     );
