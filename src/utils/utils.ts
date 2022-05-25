@@ -42,8 +42,8 @@ export const makeBestBets = (
   game2: gameDataWithValues,
   betAmount: number
 ) => {
-  const game1Odds = calculateRatioWithBet(game1, 1);
-  const game2Odds = calculateRatioWithBet(game2, 1);
+  const game1Odds = calculateRatioWithBet(game1, betAmount);
+  const game2Odds = calculateRatioWithBet(game2, betAmount);
 
   if (game1Odds[0] > 2 && game2Odds[1] > 2) {
     console.log(
