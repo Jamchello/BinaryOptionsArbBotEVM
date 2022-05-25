@@ -1,9 +1,7 @@
 import { formatEther } from "ethers/lib/utils";
 import { addEmitHelper } from "typescript";
-import { gameData, betDirection} from "../types";
+import { gameData, BetDirection, gameDataWithValues } from "../types";
 import games from "./games";
-
-
 
 //pass in roundsData object and gameData object
 //Handles contract parsing for all the different games
@@ -17,51 +15,61 @@ export const getGameBets = async (game: gameData) => {
 
   console.log(`${game.site} totals: Bull=${bull}, Bear=${bear}`);
   return [total, bear, bull];
-  throw new Error("failed parsing");
 };
+
+const calculateRatioWithBet = (
+  game: gameDataWithValues,
+  betAmount: number
+): [number, number] => {
+  const { total, bear, bull } = game;
+
+  const bullBet = (total + betAmount) / (bull + betAmount);
+
+  const bearBet = (total + betAmount) / (bear + betAmount);
+
+  return [bullBet, bearBet];
+};
+
+// const validateWorth = (
+//   game1: gameDataWithValues,
+//   game2: gameDataWithValues
+// ): Boolean => {};
 
 //function to calculate the optimal way to bet
 //takes two games, and assigns a betDirection enum value to each of the games that corresponds to which way you should bet on the game
-export const calculateBestBet = (game1 : gameData, game2: gameData)  => {
-  if(game1.multiplierBear && game1.multiplierBull && game2.multiplierBear && game2.multiplierBull){
-    let scenario1 = game1.multiplierBear + game2.multiplierBull;
-    let scenario2 = game2.multiplierBear + game1.multiplierBull;
-    if(scenario1 >=2 && scenario2 >=2){
-      scenario1 = scenario1 - 4;
-      scenario2 = scenario2 - 4;
-      const bestOption = (scenario1 >= scenario2)? scenario1: scenario2;
-    
-      if(scenario1 === bestOption){
-        game1.betDirection = betDirection.BEAR;
-        game2.betDirection = betDirection.BULL;
-      }else{
-        game2.betDirection = betDirection.BEAR;
-        game1.betDirection = betDirection.BULL;
-      }
-      console.log(`Game 1 ${game1.betDirection}, Game 2 ${game2.betDirection}`);
-  }    
-    return [game1, game2]
-  }
-
-  console.log("no bet");
-}
-
-export const calculateRatiosWithBet = (
-  game: gameData,
-  total: number,
-  bear: number,
-  bull: number,
+export const makeBestBets = (
+  game1: gameDataWithValues,
+  game2: gameDataWithValues,
   betAmount: number
-): number[] => {
-  total = total + betAmount;
-  if (game.betDirection === betDirection.BEAR) {
-    bear = bear + betAmount;
-  } else if (game.betDirection === betDirection.BULL) {
-    bull = bull + betAmount;
+) => {
+  const game1Odds = calculateRatioWithBet(game1, 1);
+  const game2Odds = calculateRatioWithBet(game2, 1);
+  if (
+    game1Odds[0] < 2 &&
+    game2Odds[1] < 2 &&
+    game1Odds[1] < 2 &&
+    game2Odds[0] < 2
+  ) {
+    //Both scenarios possible; calculate the highest returning
+    const a = game1Odds[0] + game2Odds[1];
+    const b = game1Odds[1] + game2Odds[0];
+    //if a > b, bet bull on g1, bear on g2
+    //else bet bear on g1, bull on g2
+    console.log(
+      a > b
+        ? `placed ${betAmount} BNB bull @${game1Odds[0]} on ${game1.site}, & ${betAmount} BNB bear @${game2Odds[1]} on ${game2.site}`
+        : `placed ${betAmount} BNB bull @${game2Odds[0]} on ${game2.site}, & ${betAmount} BNB bear @${game1Odds[1]} on ${game1.site}`
+    );
+  } else if (game1Odds[0] > 2 && game2Odds[1] > 2) {
+    console.log(
+      `placed ${betAmount} BNB bull @${game1Odds[0]} on ${game1.site}, & ${betAmount} BNB bear @${game2Odds[1]} on ${game2.site}`
+    );
+    //Take bull on game1, bear on game2
+  } else if (game1Odds[1] > 2 && game2Odds[0] > 2) {
+    console.log(
+      `placed ${betAmount} BNB bull @${game2Odds[0]} on ${game2.site}, & ${betAmount} BNB bear @${game1Odds[1]} on ${game1.site}`
+    );
+  } else {
+    console.log("no bets worth taking");
   }
-  const bearRatio = total / bear;
-  const bullRatio = total / bull ;
-
-
-  return [bearRatio, bullRatio];
 };

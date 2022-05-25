@@ -15,9 +15,9 @@ import {
   KeepAliveParams,
   logEvent,
   Site,
-  betDirection,
+  BetDirection,
 } from "./types";
-import { getGameBets } from "./utils/utils";
+import { getGameBets, makeBestBets } from "./utils/utils";
 let gamesCache: Array<gameData> = [];
 const betAmount: number = 1.0;
 
@@ -31,24 +31,6 @@ const updateCache = (game: gameData) => {
 
   console.log("Cache updated:");
   console.log(JSON.stringify(gamesCache));
-};
-//TODO: calculate how your bet will move the ratios
-const calculateRatiosWithBet = (
-  total: number,
-  bear: number,
-  bull: number,
-  bet: betDirection
-): number[] => {
-  total = total + betAmount;
-  if (bet === betDirection.BEAR) {
-    bear = bear + betAmount;
-  } else if (bet === betDirection.BULL) {
-    bull = bull + betAmount;
-  }
-  const bearRatio: number = bear / total;
-  const bullRatio: number = bull / total;
-
-  return [bearRatio, bullRatio];
 };
 
 const setTimeouts = async (game1: gameData, game2: gameData) => {
@@ -65,6 +47,11 @@ const setTimeouts = async (game1: gameData, game2: gameData) => {
     //const [game2AdjustedBearRatio, game2AdjustedBullRatio] = calculateRatiosWithBet(total2, bear2, bull2, bet2);
     console.log(
       `Game2 (bet time): Bear=${game2BearRatio}, Bull=${game2BullRatio}`
+    );
+    makeBestBets(
+      { ...game1, total, bear, bull },
+      { ...game2, total, bear, bull },
+      0.00303305
     );
   }, 295000 - (Date.now() - game1.timeStarted));
 

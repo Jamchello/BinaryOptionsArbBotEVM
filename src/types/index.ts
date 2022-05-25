@@ -3,7 +3,7 @@ import { providers } from "ethers";
 interface PdrResultItem {
   address: string;
 }
-export enum betDirection {
+export enum BetDirection {
   BULL = 1,
   BEAR = 0,
 }
@@ -11,8 +11,6 @@ export enum betDirection {
 export interface PdrData {
   result: Array<PdrResultItem>;
 }
-
-
 
 export type KeepAliveParams = {
   provider: providers.WebSocketProvider;
@@ -37,9 +35,12 @@ export interface gameData {
   site: Site;
   activeEpoch: number;
   timeStarted: number;
-  multiplierBull?: number;
-  multiplierBear?: number;
-  betDirection?: betDirection
+}
+
+export interface gameDataWithValues extends gameData {
+  total: number;
+  bear: number;
+  bull: number;
 }
 
 export type Site = "PRDT" | "PancakeSwap" | "Doge" | "Genie";
