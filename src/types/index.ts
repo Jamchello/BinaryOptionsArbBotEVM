@@ -1,4 +1,4 @@
-import { providers } from "ethers";
+import { BigNumber, providers, Wallet } from "ethers";
 
 interface PdrResultItem {
   address: string;
@@ -43,6 +43,14 @@ export interface gameDataWithValues extends gameData {
   bull: number;
 }
 
+export interface betData {
+  side: BetDirection;
+  amount: string;
+  gasPrice: BigNumber;
+  nonce: number;
+  activeEpoch: number;
+}
+
 export type Site = "PRDT" | "PancakeSwap" | "Doge" | "Genie";
 
 export type Rounds = Array<{ type: string; hex: string } | boolean>;
@@ -59,7 +67,8 @@ interface GameDictionaryItem {
   filter: Filter;
   bullIndex: number;
   bearIndex: number;
-  betsHandler: (game: gameData) => Promise<Array<number>>;
+  fetchGameInfo: (game: gameData) => Promise<Array<number>>;
+  makeBet: (game: betData) => Promise<boolean>;
 }
 
 export interface GamesDictionary {

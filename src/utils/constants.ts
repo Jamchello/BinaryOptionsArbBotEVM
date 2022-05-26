@@ -9,7 +9,7 @@ export const candleGenieAddress =
   process.env.CANDLEGENIE_ADDRESS ||
   "0xfdd38f9Be523Aff1AA5404B8203ABBD027e70dAD";
 export const predReadAddress = "0xbe6cb6eadf1bf80a991eb6f6fbf865ef6ba26e3b";
-export const minimumInterval = parseInt(process.env.MIN_INTERVAL || "30000");
+export const minimumInterval = parseInt(process.env.MIN_INTERVAL || "10000");
 export const prdtFilter = {
   address: predAddress,
   topics: [

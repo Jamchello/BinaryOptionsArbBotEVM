@@ -1,6 +1,7 @@
-import { ethers } from "ethers";
+import { ethers, Wallet } from "ethers";
 import { candleGenieAddress } from "../constants";
 import provider from "../provider";
 import abi from "../abis/candleGenieAbi";
 
-export default new ethers.Contract(candleGenieAddress, abi, provider);
+export default (wallet?: Wallet) =>
+  new ethers.Contract(candleGenieAddress, abi, wallet || provider);

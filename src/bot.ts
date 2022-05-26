@@ -36,33 +36,15 @@ const updateCache = (game: gameData) => {
 const setTimeouts = async (game1: gameData, game2: gameData) => {
   setTimeout(async () => {
     const [total, bear, bull] = await getGameBets(game1);
-    const game1BearRatio = total / bear;
-    const game1BullRatio = total / bull;
-    console.log(`Game1: (${game1.site}) Bear=${game1BearRatio}, Bull=${game1BullRatio}`);
-    //const [game1AdjustedBearRatio, game1AdjustedBullRatio] = calculateRatiosWithBet(total, bear, bull, bet);
 
     const [total2, bear2, bull2] = await getGameBets(game2);
-    const game2BearRatio = total2 / bear2;
-    const game2BullRatio = total2 / bull2;
-    //const [game2AdjustedBearRatio, game2AdjustedBullRatio] = calculateRatiosWithBet(total2, bear2, bull2, bet2);
-    console.log(
-      `Game2 (${game2.site}) (bet time): Bear=${game2BearRatio}, Bull=${game2BullRatio}`
-    );
-    makeBestBets(
+
+    await makeBestBets(
       { ...game1, total, bear, bull },
       { ...game2, total: total2, bear: bear2, bull: bull2 },
       0.00303305
     );
   }, 295000 - (Date.now() - game1.timeStarted));
-
-  setTimeout(async () => {
-    const [total, bear, bull] = await getGameBets(game2);
-    const game2BearRatio = total / bear;
-    const game2BullRatio = total / bull;
-    console.log(
-      `Game2 (${game2.site})(final): Bear=${game2BearRatio}, Bull=${game2BullRatio}`
-    );
-  }, 295000 - (Date.now() - game2.timeStarted));
 };
 
 const playTheGame = async (game1: gameData, game2: gameData) => {
@@ -70,7 +52,6 @@ const playTheGame = async (game1: gameData, game2: gameData) => {
     console.error("Need to pass in two games...");
   } else {
     console.log("timers set");
-    console.log("Calling set timeouts")
     setTimeouts(game1, game2);
   }
 };
