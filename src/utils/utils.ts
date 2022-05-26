@@ -49,7 +49,7 @@ export const makeBestBets = async (
   betAmount: number
 ) => {
   const nonce = await wallet.getTransactionCount();
-  const gasPrice = (await wallet.getGasPrice()).mul(1.15);
+  const gasPrice = await wallet.getGasPrice();
 
   const game1Odds = calculateRatioWithBet(game1, betAmount);
   const game2Odds = calculateRatioWithBet(game2, betAmount);
