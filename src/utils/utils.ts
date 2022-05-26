@@ -58,6 +58,7 @@ export const makeBestBets = async (
   let transactions = [];
 
   if (game1Odds[0] > 2 && game2Odds[1] > 2) {
+    console.log("Attempting to place bet");
     transactions.push(
       games[game1.site].makeBet({
         activeEpoch: game1.activeEpoch,
@@ -82,6 +83,7 @@ export const makeBestBets = async (
     );
     //Take bull on game1, bear on game2
   } else if (game1Odds[1] > 2 && game2Odds[0] > 2) {
+    console.log("Attempting to place bet");
     transactions.push(
       games[game2.site].makeBet({
         activeEpoch: game1.activeEpoch,
