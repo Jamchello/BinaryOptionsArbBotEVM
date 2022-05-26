@@ -57,33 +57,33 @@ export const makeBestBets = async (
   let transactions = [];
 
   if (game1Odds[0] > 2 && game2Odds[1] > 2) {
+
+    transactions.push(
+      games[game1.site].makeBet({
+        activeEpoch: game1.activeEpoch,
+        side: BetDirection.BULL,
+        amount: betAmount.toString(),
+        gasPrice,
+        nonce,
+      })
+    );
+
+
+    transactions.push(
+      games[game2.site].makeBet({
+        activeEpoch: game2.activeEpoch,
+        side: BetDirection.BEAR,
+        amount: betAmount.toString(),
+        gasPrice,
+        nonce,
+      })
+    );
     console.log(
       `placed ${betAmount} BNB bull @${game1Odds[0]} on ${game1.site}, & ${betAmount} BNB bear @${game2Odds[1]} on ${game2.site}`
     );
-    transactions.push(
-      games[game1.site].makeBet({
-        activeEpoch: game1.activeEpoch,
-        side: BetDirection.BULL,
-        amount: betAmount.toString(),
-        gasPrice,
-        nonce,
-      })
-    );
-
-    transactions.push(
-      games[game2.site].makeBet({
-        activeEpoch: game2.activeEpoch,
-        side: BetDirection.BEAR,
-        amount: betAmount.toString(),
-        gasPrice,
-        nonce,
-      })
-    );
     //Take bull on game1, bear on game2
   } else if (game1Odds[1] > 2 && game2Odds[0] > 2) {
-    console.log(
-      `placed ${betAmount} BNB bull @${game2Odds[0]} on ${game2.site}, & ${betAmount} BNB bear @${game1Odds[1]} on ${game1.site}`
-    );
+
     transactions.push(
       games[game2.site].makeBet({
         activeEpoch: game1.activeEpoch,
@@ -102,6 +102,9 @@ export const makeBestBets = async (
         gasPrice,
         nonce,
       })
+    );
+    console.log(
+      `placed ${betAmount} BNB bull @${game2Odds[0]} on ${game2.site}, & ${betAmount} BNB bear @${game1Odds[1]} on ${game1.site}`
     );
   } else {
     console.log("no bets worth taking");
