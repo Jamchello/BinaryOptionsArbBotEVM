@@ -19,7 +19,8 @@ export const getGameBets = async (game: gameData) => {
 
 export const formatBytes = (epoch: number, prefix: string) => {
   const epochInHex = epoch.toString(16);
-  const bytesNeeded = 34 - epochInHex.length;
+  const bytesNeeded =
+    36 - (epochInHex.length + prefix.replace("0x", "").length) / 2;
   return `${prefix}${"00".repeat(bytesNeeded)}${epochInHex}`;
 };
 
@@ -57,7 +58,6 @@ export const makeBestBets = async (
   let transactions = [];
 
   if (game1Odds[0] > 2 && game2Odds[1] > 2) {
-
     transactions.push(
       games[game1.site].makeBet({
         activeEpoch: game1.activeEpoch,
@@ -67,7 +67,6 @@ export const makeBestBets = async (
         nonce,
       })
     );
-
 
     transactions.push(
       games[game2.site].makeBet({
@@ -83,7 +82,6 @@ export const makeBestBets = async (
     );
     //Take bull on game1, bear on game2
   } else if (game1Odds[1] > 2 && game2Odds[0] > 2) {
-
     transactions.push(
       games[game2.site].makeBet({
         activeEpoch: game1.activeEpoch,

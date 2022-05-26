@@ -29,8 +29,8 @@ const gamesDictionary: GamesDictionary = {
       const { amount, side, activeEpoch, gasPrice, nonce } = game;
       const betFunc =
         side == BetDirection.BEAR
-          ? dogeContractInstance.betBear
-          : dogeContractInstance.betBull;
+          ? dogeContractInstance.user_betBear
+          : dogeContractInstance.user_betBull;
       const tx = await betFunc(activeEpoch, {
         gasPrice,
         nonce,
@@ -49,7 +49,7 @@ const gamesDictionary: GamesDictionary = {
       prdtProxyContractInstance.getRound(0, game.activeEpoch),
     makeBet: async (game: betData) => {
       const { amount, side, activeEpoch, gasPrice, nonce } = game;
-      const prefix = side == BetDirection.BEAR ? "0xaa6b873a" : "57fb096f";
+      const prefix = side == BetDirection.BEAR ? "0xaa6b873a" : "0x57fb096f";
       const data = formatBytes(activeEpoch, prefix);
       const tx = await wallet.sendTransaction({
         data,
@@ -73,8 +73,8 @@ const gamesDictionary: GamesDictionary = {
       const { amount, side, activeEpoch, gasPrice, nonce } = game;
       const betFunc =
         side == BetDirection.BEAR
-          ? pcksContractInstance.user_BetBear
-          : pcksContractInstance.user_BetBull;
+          ? pcksContractInstance.betBear
+          : pcksContractInstance.betBull;
       const tx = await betFunc(activeEpoch, {
         gasPrice,
         nonce,
