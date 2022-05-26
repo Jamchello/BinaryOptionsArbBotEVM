@@ -17,6 +17,12 @@ export const getGameBets = async (game: gameData) => {
   return [total, bear, bull];
 };
 
+export const formatBytes = (epoch: number, prefix: string) => {
+  const epochInHex = epoch.toString(16);
+  const bytesNeeded = 34 - epochInHex.length;
+  return `${prefix}${"00".repeat(bytesNeeded)}${epochInHex}`;
+};
+
 const calculateRatioWithBet = (
   game: gameDataWithValues,
   betAmount: number

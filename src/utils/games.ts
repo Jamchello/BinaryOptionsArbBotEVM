@@ -4,6 +4,7 @@ import {
   prdtFilter,
   pancakeSwapFilter,
   candleGenieFilter,
+  predAddress,
 } from "./constants";
 import doge from "./contracts/doge";
 import pancake from "./contracts/pancakeSwap";
@@ -11,6 +12,7 @@ import prdtProxyContractInstance from "./contracts/prdtProxy";
 import genie from "./contracts/candleGenie";
 import wallet from "./wallet";
 import { parseEther } from "ethers/lib/utils";
+import { formatBytes } from "./utils";
 const dogeContractInstance = doge(wallet);
 const pcksContractInstance = pancake(wallet);
 const candleGenieContractInstance = genie(wallet);
@@ -29,28 +31,37 @@ const gamesDictionary: GamesDictionary = {
         side == BetDirection.BEAR
           ? dogeContractInstance.betBear
           : dogeContractInstance.betBull;
-      const tx = await betFunc(parseEther(amount), activeEpoch, {
+      const tx = await betFunc(activeEpoch, {
         gasPrice,
         nonce,
+        value: parseEther(amount),
       });
       await tx.wait(3);
       return true;
     },
   },
-  // PRDT: {
-  //   site: "PRDT",
-  //   filter: prdtFilter,
-  //   bullIndex: 2,
-  //   bearIndex: 3,
-  //   fetchGameInfo: async (game: gameData) =>
-  //     prdtProxyContractInstance.getRound(0, game.activeEpoch),
-  //   makeBet: async (game: betData) => {
-  //     const betFunc = game.side == BetDirection.BEAR ? dogeContractInstance.user_BetBear : dogeContractInstance.user_BetBull;
-  //     const tx = await betFunc(parseEther(game.amount.toString()), game.activeEpoch)
-  //     await tx.wait(3)
-  //     return true
-  //   }
-  // },
+  PRDT: {
+    site: "PRDT",
+    filter: prdtFilter,
+    bullIndex: 2,
+    bearIndex: 3,
+    fetchGameInfo: async (game: gameData) =>
+      prdtProxyContractInstance.getRound(0, game.activeEpoch),
+    makeBet: async (game: betData) => {
+      const { amount, side, activeEpoch, gasPrice, nonce } = game;
+      const prefix = side == BetDirection.BEAR ? "0xaa6b873a" : "57fb096f";
+      const data = formatBytes(activeEpoch, prefix);
+      const tx = await wallet.sendTransaction({
+        data,
+        gasPrice,
+        nonce,
+        value: parseEther(amount),
+        to: predAddress,
+      });
+      await tx.wait(3);
+      return true;
+    },
+  },
   PancakeSwap: {
     site: "PancakeSwap",
     filter: pancakeSwapFilter,
@@ -64,9 +75,10 @@ const gamesDictionary: GamesDictionary = {
         side == BetDirection.BEAR
           ? pcksContractInstance.user_BetBear
           : pcksContractInstance.user_BetBull;
-      const tx = await betFunc(parseEther(amount), activeEpoch, {
+      const tx = await betFunc(activeEpoch, {
         gasPrice,
         nonce,
+        value: parseEther(amount),
       });
       await tx.wait(3);
       return true;
@@ -85,9 +97,10 @@ const gamesDictionary: GamesDictionary = {
         side == BetDirection.BEAR
           ? pcksContractInstance.BetBear
           : pcksContractInstance.BetBull;
-      const tx = await betFunc(parseEther(amount), activeEpoch, {
+      const tx = await betFunc(activeEpoch, {
         gasPrice,
         nonce,
+        value: parseEther(amount),
       });
       await tx.wait(3);
       return true;
