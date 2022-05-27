@@ -68,7 +68,7 @@ export const makeBestBets = async (
         side: BetDirection.BEAR,
         amount: betAmount.toString(),
         gasPrice,
-        nonce,
+        nonce: nonce + 1,
       })
     );
     console.log(
