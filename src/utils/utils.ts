@@ -79,7 +79,7 @@ export const makeBestBets = async (
     console.log("Attempting to place bet");
     transactions.push(
       games[game2.site].makeBet({
-        activeEpoch: game1.activeEpoch,
+        activeEpoch: game2.activeEpoch,
         side: BetDirection.BULL,
         amount: betAmount.toString(),
         gasPrice,
@@ -89,7 +89,7 @@ export const makeBestBets = async (
 
     transactions.push(
       games[game1.site].makeBet({
-        activeEpoch: game2.activeEpoch,
+        activeEpoch: game1.activeEpoch,
         side: BetDirection.BEAR,
         amount: betAmount.toString(),
         gasPrice,
