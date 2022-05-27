@@ -33,6 +33,7 @@ const gamesDictionary: GamesDictionary = {
           : dogeContractInstance.user_BetBull;
       const tx = await betFunc(activeEpoch, {
         gasPrice,
+        gasLimit: 175_000,
         nonce,
         value: parseEther(amount),
       });
@@ -54,6 +55,7 @@ const gamesDictionary: GamesDictionary = {
       const tx = await wallet.sendTransaction({
         data,
         gasPrice,
+        gasLimit: 130_000,
         nonce,
         value: parseEther(amount),
         to: predAddress,
@@ -77,6 +79,7 @@ const gamesDictionary: GamesDictionary = {
           : pcksContractInstance.betBull;
       const tx = await betFunc(activeEpoch, {
         gasPrice,
+        gasLimit: 130_000,
         nonce,
         value: parseEther(amount),
       });
@@ -99,6 +102,7 @@ const gamesDictionary: GamesDictionary = {
           : pcksContractInstance.BetBull;
       const tx = await betFunc(activeEpoch, {
         gasPrice,
+        gasLimit: 175_000,
         nonce,
         value: parseEther(amount),
       });
