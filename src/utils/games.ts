@@ -12,7 +12,6 @@ import prdtProxyContractInstance from "./contracts/prdtProxy";
 import genie from "./contracts/candleGenie";
 import wallet from "./wallet";
 import { parseEther } from "ethers/lib/utils";
-import { formatBytes } from "./utils";
 const dogeContractInstance = doge(wallet);
 const pcksContractInstance = pancake(wallet);
 const candleGenieContractInstance = genie(wallet);
@@ -50,15 +49,15 @@ const gamesDictionary: GamesDictionary = {
       prdtProxyContractInstance.getRound(0, game.activeEpoch),
     makeBet: async (game: betData) => {
       const { amount, side, activeEpoch, gasPrice, nonce } = game;
-      const prefix = side == BetDirection.BEAR ? "0xaa6b873a" : "0x57fb096f";
-      const data = formatBytes(activeEpoch, prefix);
-      const tx = await wallet.sendTransaction({
-        data,
+      const betFunc =
+        side == BetDirection.BEAR
+          ? pcksContractInstance.betBear
+          : pcksContractInstance.betBull;
+      const tx = await betFunc(activeEpoch, {
         gasPrice,
         gasLimit: 130_000,
         nonce,
         value: parseEther(amount),
-        to: predAddress,
       });
       await tx.wait(3);
       return true;
