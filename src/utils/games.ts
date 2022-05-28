@@ -30,8 +30,8 @@ const gamesDictionary: GamesDictionary = {
       const { amount, side, activeEpoch, gasPrice, nonce } = game;
       const betFunc =
         side == BetDirection.BEAR
-          ? dogeContractInstance.user_BetBear
-          : dogeContractInstance.user_BetBull;
+          ? dogeContractInstance.functions.user_BetBear
+          : dogeContractInstance.functions.user_BetBull;
       const tx = await betFunc(activeEpoch, {
         gasPrice,
         gasLimit: 175_000,
