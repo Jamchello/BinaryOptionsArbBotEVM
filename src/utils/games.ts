@@ -4,7 +4,6 @@ import {
   prdtFilter,
   pancakeSwapFilter,
   candleGenieFilter,
-  predAddress,
 } from "./constants";
 import doge from "./contracts/doge";
 import pancake from "./contracts/pancakeSwap";
@@ -12,10 +11,12 @@ import prdt from "./contracts/prdtProxy";
 import genie from "./contracts/candleGenie";
 import wallet from "./wallet";
 import { parseEther } from "ethers/lib/utils";
+import prdtProxy from "./contracts/prdtProxy";
 const dogeContractInstance = doge(wallet);
 const pcksContractInstance = pancake(wallet);
 const candleGenieContractInstance = genie(wallet);
 const prdtContractInstance = prdt(wallet);
+const prdtProxyInstance = prdtProxy();
 
 const gamesDictionary: GamesDictionary = {
   Doge: {
@@ -47,7 +48,7 @@ const gamesDictionary: GamesDictionary = {
     bullIndex: 2,
     bearIndex: 3,
     fetchGameInfo: async (game: gameData) =>
-      prdtContractInstance.getRound(0, game.activeEpoch),
+      prdtProxyInstance.getRound(0, game.activeEpoch),
     makeBet: async (game: betData) => {
       const { amount, side, activeEpoch, gasPrice, nonce } = game;
       const betFunc =
