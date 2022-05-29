@@ -30,7 +30,7 @@ const gamesDictionary: GamesDictionary = {
       const { amount, side, activeEpoch, gasPrice, nonce } = game;
       const options = {        
         gasPrice,
-        gasLimit: 130_000,
+        gasLimit: 175_000,
         nonce,
         value: parseEther(amount),}
         
@@ -100,7 +100,7 @@ const gamesDictionary: GamesDictionary = {
       const { amount, side, activeEpoch, gasPrice, nonce } = game;
       const options = {        
         gasPrice,
-        gasLimit: 130_000,
+        gasLimit: 175_000,
         nonce,
         value: parseEther(amount),}
         
