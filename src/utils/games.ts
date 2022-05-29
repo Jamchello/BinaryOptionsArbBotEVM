@@ -28,16 +28,16 @@ const gamesDictionary: GamesDictionary = {
       dogeContractInstance.Rounds(game.activeEpoch),
     makeBet: async (game: betData) => {
       const { amount, side, activeEpoch, gasPrice, nonce } = game;
-      const betFunc =
-        side == BetDirection.BEAR
-          ? dogeContractInstance.functions.user_BetBear
-          : dogeContractInstance.functions.user_BetBull;
-      const tx = await betFunc(activeEpoch, {
+      const options = {        
         gasPrice,
-        gasLimit: 175_000,
+        gasLimit: 130_000,
         nonce,
-        value: parseEther(amount),
-      });
+        value: parseEther(amount),}
+        
+      const tx =
+        side == BetDirection.BEAR
+          ? await pcksContractInstance.user_BetBear(activeEpoch,options)
+          : await pcksContractInstance.user_BetBull(activeEpoch, options);
       await tx.wait(3);
       return true;
     },
@@ -51,16 +51,16 @@ const gamesDictionary: GamesDictionary = {
       prdtProxyInstance.getRound(0, game.activeEpoch),
     makeBet: async (game: betData) => {
       const { amount, side, activeEpoch, gasPrice, nonce } = game;
-      const betFunc =
-        side == BetDirection.BEAR
-          ? prdtContractInstance.betBear
-          : prdtContractInstance.betBull;
-      const tx = await betFunc(activeEpoch, {
+      const options = {        
         gasPrice,
         gasLimit: 130_000,
         nonce,
-        value: parseEther(amount),
-      });
+        value: parseEther(amount),}
+        
+      const tx =
+        side == BetDirection.BEAR
+          ? await pcksContractInstance.betBear(activeEpoch,options)
+          : await pcksContractInstance.betBull(activeEpoch, options);
       await tx.wait(3);
       return true;
     },
@@ -74,16 +74,17 @@ const gamesDictionary: GamesDictionary = {
       pcksContractInstance.rounds(game.activeEpoch),
     makeBet: async (game: betData) => {
       const { amount, side, activeEpoch, gasPrice, nonce } = game;
-      const betFunc =
-        side == BetDirection.BEAR
-          ? pcksContractInstance.betBear
-          : pcksContractInstance.betBull;
-      const tx = await betFunc(activeEpoch, {
+      const options = {        
         gasPrice,
         gasLimit: 130_000,
         nonce,
-        value: parseEther(amount),
-      });
+        value: parseEther(amount),}
+        
+      const tx =
+        side == BetDirection.BEAR
+          ? await pcksContractInstance.betBear(activeEpoch,options)
+          : await pcksContractInstance.betBull(activeEpoch, options);
+
       await tx.wait(3);
       return true;
     },
@@ -97,16 +98,16 @@ const gamesDictionary: GamesDictionary = {
       candleGenieContractInstance.Rounds(game.activeEpoch),
     makeBet: async (game: betData) => {
       const { amount, side, activeEpoch, gasPrice, nonce } = game;
-      const betFunc =
-        side == BetDirection.BEAR
-          ? pcksContractInstance.BetBear
-          : pcksContractInstance.BetBull;
-      const tx = await betFunc(activeEpoch, {
+      const options = {        
         gasPrice,
-        gasLimit: 175_000,
+        gasLimit: 130_000,
         nonce,
-        value: parseEther(amount),
-      });
+        value: parseEther(amount),}
+        
+      const tx =
+        side == BetDirection.BEAR
+          ? await pcksContractInstance.BetBear(activeEpoch,options)
+          : await pcksContractInstance.BetBull(activeEpoch, options);
       await tx.wait(3);
       return true;
     },
