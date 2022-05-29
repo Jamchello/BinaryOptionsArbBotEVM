@@ -36,8 +36,8 @@ const gamesDictionary: GamesDictionary = {
         
       const tx =
         side == BetDirection.BEAR
-          ? await pcksContractInstance.user_BetBear(activeEpoch,options)
-          : await pcksContractInstance.user_BetBull(activeEpoch, options);
+          ? await dogeContractInstance.user_BetBear(activeEpoch,options)
+          : await dogeContractInstance.user_BetBull(activeEpoch, options);
       await tx.wait(3);
       return true;
     },
@@ -106,8 +106,8 @@ const gamesDictionary: GamesDictionary = {
         
       const tx =
         side == BetDirection.BEAR
-          ? await pcksContractInstance.BetBear(activeEpoch,options)
-          : await pcksContractInstance.BetBull(activeEpoch, options);
+          ? await candleGenieContractInstance.BetBear(activeEpoch,options)
+          : await candleGenieContractInstance.BetBull(activeEpoch, options);
       await tx.wait(3);
       return true;
     },
