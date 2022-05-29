@@ -61,6 +61,7 @@ export const makeBestBets = async (
         nonce,
       })
     );
+    console.log('pushed tx 1');
 
     transactions.push(
       games[game2.site].makeBet({
@@ -71,6 +72,7 @@ export const makeBestBets = async (
         nonce: nonce + 1,
       })
     );
+    console.log('pushed tx 2');
     console.log(
       `placed ${betAmount} BNB bull @${game1Odds[0]} on ${game1.site}, & ${betAmount} BNB bear @${game2Odds[1]} on ${game2.site}`
     );
@@ -86,6 +88,7 @@ export const makeBestBets = async (
         nonce,
       })
     );
+    console.log('pushed tx 1');
 
     transactions.push(
       games[game1.site].makeBet({
@@ -96,6 +99,7 @@ export const makeBestBets = async (
         nonce,
       })
     );
+    console.log('pushed tx 2');
     console.log(
       `placed ${betAmount} BNB bull @${game2Odds[0]} on ${game2.site}, & ${betAmount} BNB bear @${game1Odds[1]} on ${game1.site}`
     );
