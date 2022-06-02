@@ -67,6 +67,7 @@ interface GameDictionaryItem {
   filter: Filter;
   bullIndex: number;
   bearIndex: number;
+  gasLimit: number;
   fetchGameInfo: (game: gameData) => Promise<Array<number>>;
   makeBet: (game: betData) => Promise<boolean>;
 }
