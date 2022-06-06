@@ -13,7 +13,6 @@ export interface PdrData {
 }
 
 export type KeepAliveParams = {
-  provider: providers.WebSocketProvider;
   onDisconnect: (err: any) => void;
   expectedPongBack?: number;
   checkInterval?: number;

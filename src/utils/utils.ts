@@ -45,7 +45,8 @@ const isWorthAfterGas  = (betAmount: number,
   const betDirectionWorth = [false, false]
   const game1_gasLimit = games[game1.site].gasLimit;
   const games2_gasLimit = games[game2.site].gasLimit;
-  const maximumGasFee = (game1_gasLimit * gasPrice.toNumber()) + (games2_gasLimit * gasPrice.toNumber());
+  const maximumGasFee = parseFloat(formatEther((game1_gasLimit * gasPrice.toNumber()) + (games2_gasLimit * gasPrice.toNumber())));
+  
 
   //see if our profit is larger than our gas fee.
   if( ((game1Odds[0] - 2) * betAmount > maximumGasFee) && ((game2Odds[1] -2) * betAmount > maximumGasFee) ) {
@@ -75,9 +76,10 @@ export const makeBestBets = async (
   const game1Odds = calculateRatioWithBet(game1, betAmount);
   const game2Odds = calculateRatioWithBet(game2, betAmount);
   const [bullishWorth, bearishWorth] = isWorthAfterGas(betAmount, gasPrice, game1, game2, game1Odds, game2Odds)
+  console.log(bullishWorth, bearishWorth)
   let transactions = [];
 
-  if (game1Odds[0] > 2 && game2Odds[1] > 2) {
+  if (game1Odds[0] > 2 && game2Odds[1] > 2 ) {
     console.log("Attempting to place bet");
     transactions.push(
       games[game1.site].makeBet({

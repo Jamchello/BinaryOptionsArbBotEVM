@@ -99,6 +99,30 @@ const gamesDictionary: GamesDictionary = {
       return true;
     },
   },
+  Genie: {
+    site: "Genie",
+    filter: candleGenieFilter,
+    bullIndex: 1,
+    bearIndex: 2,
+    gasLimit: candleGenie_gasLimit,
+    fetchGameInfo: async (game: gameData) =>
+      candleGenieContractInstance.Rounds(game.activeEpoch),
+    makeBet: async (game: betData) => {
+      const { amount, side, activeEpoch, gasPrice, nonce } = game;
+      const options = {        
+        gasPrice,
+        gasLimit: candleGenie_gasLimit,
+        nonce,
+        value: parseEther(amount),}
+        
+      const tx =
+        side == BetDirection.BEAR
+          ? await candleGenieContractInstance.BetBear(activeEpoch,options)
+          : await candleGenieContractInstance.BetBull(activeEpoch, options);
+      await tx.wait(3);
+      return true;
+    },
+  },
 
 };
 

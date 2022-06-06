@@ -9,7 +9,6 @@ require("dotenv").config();
 import { minimumInterval } from "./utils/constants";
 import games from "./utils/games";
 import { BigNumber } from "ethers";
-import provider from "./utils/provider";
 import {
   gameData,
   KeepAliveParams,
@@ -18,6 +17,7 @@ import {
   BetDirection,
 } from "./types";
 import { getGameBets, makeBestBets } from "./utils/utils";
+import { spawnProvider } from "./utils/provider";
 let gamesCache: Array<gameData> = [];
 const betAmount: number = 1.0;
 
@@ -44,7 +44,7 @@ const setTimeouts = async (game1: gameData, game2: gameData) => {
       { ...game2, total: total2, bear: bear2, bull: bull2 },
       0.00303305
     );
-  }, 295000 - (Date.now() - game1.timeStarted));
+  }, 297000 - (Date.now() - game1.timeStarted));  //updated timeout so that bets are placed slightly later  (2 seconds)
 };
 
 const playTheGame = async (game1: gameData, game2: gameData) => {
@@ -76,14 +76,13 @@ const handleRoundStartEvent = (log: logEvent, site: Site) => {
 };
 
 const keepAlive = ({
-  provider,
   onDisconnect,
   expectedPongBack = 15000,
   checkInterval = 7500,
 }: KeepAliveParams) => {
   let pingTimeout: NodeJS.Timeout | null = null;
   let keepAliveInterval: NodeJS.Timeout | null = null;
-
+  const provider = spawnProvider();
   provider._websocket.on("open", () => {
     keepAliveInterval = setInterval(() => {
       provider._websocket.ping();
@@ -124,7 +123,6 @@ const main = () => {
     `Minimum Interval is set to ${Math.ceil(minimumInterval / 1000)} seconds.`
   );
   keepAlive({
-    provider,
     onDisconnect: (err) => {
       main();
       console.error(
