@@ -9,14 +9,15 @@ require("dotenv").config();
 import { minimumInterval } from "./utils/constants";
 import games from "./utils/games";
 import { BigNumber } from "ethers";
-import provider from "./utils/provider";
 import {
   gameData,
   KeepAliveParams,
   logEvent,
   Site,
-  betDirection,
+  BetDirection,
 } from "./types";
+import { getGameBets, makeBestBets } from "./utils/utils";
+import { spawnProvider } from "./utils/provider";
 let gamesCache: Array<gameData> = [];
 const betAmount: number = 1.0;
 
@@ -31,50 +32,19 @@ const updateCache = (game: gameData) => {
   console.log("Cache updated:");
   console.log(JSON.stringify(gamesCache));
 };
-//TODO: calculate how your bet will move the ratios
-const calculateRatiosWithBet = (
-  total: number,
-  bear: number,
-  bull: number,
-  bet: betDirection
-): number[] => {
-  total = total + betAmount;
-  if (bet === betDirection.BEAR) {
-    bear = bear + betAmount;
-  } else if (bet === betDirection.BULL) {
-    bull = bull + betAmount;
-  }
-  const bearRatio: number = bear / total;
-  const bullRatio: number = bull / total;
-
-  return [bearRatio, bullRatio];
-};
 
 const setTimeouts = async (game1: gameData, game2: gameData) => {
   setTimeout(async () => {
     const [total, bear, bull] = await getGameBets(game1);
-    const game1BearRatio = total / bear;
-    const game1BullRatio = total / bull;
-    console.log(`Game1: Bear=${game1BearRatio}, Bull=${game1BullRatio}`);
-    //const [game1AdjustedBearRatio, game1AdjustedBullRatio] = calculateRatiosWithBet(total, bear, bull, bet);
 
     const [total2, bear2, bull2] = await getGameBets(game2);
-    const game2BearRatio = total2 / bear2;
-    const game2BullRatio = total2 / bull2;
-    //const [game2AdjustedBearRatio, game2AdjustedBullRatio] = calculateRatiosWithBet(total2, bear2, bull2, bet2);
-    console.log(
-      `Game2 (bet time): Bear=${game2BearRatio}, Bull=${game2BullRatio}`
-    );
-  }, 295000 - (Date.now() - game1.timeStarted));
 
-  setTimeout(async () => {
-    const [total, bear, bull] = await getGameBets(game2);
-    const game2BearRatio = total / bear;
-    const game2BullRatio = total / bull;
-    console.log(
-      `Game2 (final): Bear=${game2BearRatio}, Bull=${game2BullRatio}`
+    await makeBestBets(
+      { ...game1, total, bear, bull },
+      { ...game2, total: total2, bear: bear2, bull: bull2 },
+      0.00303305
     );
-  }, 295000 - (Date.now() - game2.timeStarted));
+  }, 297000 - (Date.now() - game1.timeStarted));  //updated timeout so that bets are placed slightly later  (2 seconds)
 };
 
 const playTheGame = async (game1: gameData, game2: gameData) => {
@@ -106,14 +76,13 @@ const handleRoundStartEvent = (log: logEvent, site: Site) => {
 };
 
 const keepAlive = ({
-  provider,
   onDisconnect,
   expectedPongBack = 15000,
   checkInterval = 7500,
 }: KeepAliveParams) => {
   let pingTimeout: NodeJS.Timeout | null = null;
   let keepAliveInterval: NodeJS.Timeout | null = null;
-
+  const provider = spawnProvider();
   provider._websocket.on("open", () => {
     keepAliveInterval = setInterval(() => {
       provider._websocket.ping();
@@ -154,7 +123,6 @@ const main = () => {
     `Minimum Interval is set to ${Math.ceil(minimumInterval / 1000)} seconds.`
   );
   keepAlive({
-    provider,
     onDisconnect: (err) => {
       main();
       console.error(
@@ -166,8 +134,3 @@ const main = () => {
 };
 
 main();
-function getGameBets(
-  game1: gameData
-): [any, any, any] | PromiseLike<[any, any, any]> {
-  throw new Error("Function not implemented.");
-}

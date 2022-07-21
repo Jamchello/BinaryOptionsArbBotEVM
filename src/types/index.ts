@@ -1,9 +1,9 @@
-import { providers } from "ethers";
+import { BigNumber, providers, Wallet } from "ethers";
 
 interface PdrResultItem {
   address: string;
 }
-export enum betDirection {
+export enum BetDirection {
   BULL = 1,
   BEAR = 0,
 }
@@ -13,7 +13,6 @@ export interface PdrData {
 }
 
 export type KeepAliveParams = {
-  provider: providers.WebSocketProvider;
   onDisconnect: (err: any) => void;
   expectedPongBack?: number;
   checkInterval?: number;
@@ -35,8 +34,20 @@ export interface gameData {
   site: Site;
   activeEpoch: number;
   timeStarted: number;
-  multiplierBull?: number;
-  multiplierBear?: number;
+}
+
+export interface gameDataWithValues extends gameData {
+  total: number;
+  bear: number;
+  bull: number;
+}
+
+export interface betData {
+  side: BetDirection;
+  amount: string;
+  gasPrice: BigNumber;
+  nonce: number;
+  activeEpoch: number;
 }
 
 export type Site = "PRDT" | "PancakeSwap" | "Doge" | "Genie";
@@ -55,7 +66,9 @@ interface GameDictionaryItem {
   filter: Filter;
   bullIndex: number;
   bearIndex: number;
-  betsHandler: (game: gameData) => Promise<Array<number>>;
+  gasLimit: number;
+  fetchGameInfo: (game: gameData) => Promise<Array<number>>;
+  makeBet: (game: betData) => Promise<boolean>;
 }
 
 export interface GamesDictionary {
